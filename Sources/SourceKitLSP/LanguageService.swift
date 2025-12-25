@@ -201,6 +201,13 @@ package protocol LanguageService: AnyObject, Sendable {
   func doccDocumentation(_ req: DoccDocumentationRequest) async throws -> DoccDocumentationResponse
   func symbolInfo(_ request: SymbolInfoRequest) async throws -> [SymbolDetails]
 
+  /// Checks whether the given position is on (or immediately after) a literal value token.
+  ///
+  /// Literal value tokens do not support jump-to-definition because they represent
+  /// concrete values written directly in source code and therefore have no
+  /// meaningful definition location.
+  func isPositionOnLiteralToken(_ position: Position, in uri: DocumentURI) async -> Bool
+
   /// Retrieve the symbol graph for the given position in the given snapshot, including the USR of the symbol at the
   /// given position and the doc comments of the symbol at that position.
   func symbolGraph(
@@ -393,6 +400,10 @@ package extension LanguageService {
 
   func symbolInfo(_ request: SymbolInfoRequest) async throws -> [SymbolDetails] {
     throw ResponseError.requestNotImplemented(SymbolInfoRequest.self)
+  }
+
+  func isPositionOnLiteralToken(_ position: Position, in uri: DocumentURI) async -> Bool {
+      return false
   }
 
   func symbolGraph(
