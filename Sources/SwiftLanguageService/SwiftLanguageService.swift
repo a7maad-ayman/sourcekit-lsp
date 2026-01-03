@@ -1331,10 +1331,9 @@ extension SwiftLanguageService {
     func isLiteralTokenKind(_ token: TokenSyntax) -> Bool {
       switch token.tokenKind {
       case .stringSegment,
-           .integerLiteral,
-           .floatLiteral:
-        return true
-      case .keyword(let keyword) where keyword == .true || keyword == .false || keyword == .nil:
+        .integerLiteral,
+        .floatLiteral,
+        .keyword(.true), .keyword(.false), .keyword(.nil):
         return true
       default:
         return false
@@ -1347,7 +1346,8 @@ extension SwiftLanguageService {
       }
 
       if let tokenBefore = token.previousToken(viewMode: .sourceAccurate),
-         isLiteralTokenKind(tokenBefore) {
+        isLiteralTokenKind(tokenBefore)
+      {
         return true
       }
     }
